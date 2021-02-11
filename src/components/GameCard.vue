@@ -13,8 +13,11 @@
       color="error"
       content="Work in progress"
       :value="gameData.isWIP"
+      style="margin-right: 2px;"
     >
-      <span class="text name">{{ gameData.name }}</span>
+      <span class="text name">
+        <FitText>{{ gameData.name }}</FitText>
+      </span>
     </v-badge>
     <EngineIcon
       _style="cursor:pointer; position: absolute; right: 10px; bottom: 10px; opacity: 0.3"
@@ -49,6 +52,7 @@
 <script>
 import PlatformIcon from "./PlatformIcon";
 import EngineIcon from "./EngineIcon";
+import FitText from "./FitText";
 
 export default {
   name: "GameCard",
@@ -58,7 +62,7 @@ export default {
       required: true,
     },
   },
-  components: { PlatformIcon, EngineIcon },
+  components: { PlatformIcon, EngineIcon, FitText },
   computed: {
     dark() {
       return this.$vuetify.theme.dark;
@@ -108,6 +112,7 @@ body,
 }
 .name {
   font-size: 24pt;
+  height: 34px;
   margin-left: 14px;
 }
 .author {

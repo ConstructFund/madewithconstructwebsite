@@ -171,12 +171,22 @@
       </v-layout>
     </v-main>
     <v-footer app dark color="accent" class="footer" height="30">
+      <span class="text footerText">
+        Contribute on
+        <a
+          href="https://github.com/skymen/madewithconstructwebsite"
+          target="__blank"
+        >
+          Github
+        </a>
+      </span>
+
       <v-spacer></v-spacer>
       <span class="text footerText">
         Made with ❤ by the
-        <a href="https://discord.com/invite/HyvYes8" target="__blank"
-          >Construct Community</a
-        >
+        <a href="https://discord.com/invite/HyvYes8" target="__blank">
+          Construct Community
+        </a>
       </span>
     </v-footer>
   </v-app>
