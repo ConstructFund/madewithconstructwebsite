@@ -1,28 +1,555 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app :dark="dark" style="background: #00000000;">
+    <v-app-bar app color="accent" dark height="90px" class="topBar">
+      <h2 class="mr-2 text" style="padding-left: 40px">Made with</h2>
+      <div class="d-flex align-center">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://construct-static.com/images/v860/r/global/construct-3-logo_v43.png"
+          transition="scale-transition"
+          width="40"
+        />
+
+        <v-img
+          alt="Vuetify Name"
+          class="shrink mt-1 hidden-sm-and-down"
+          contain
+          min-width="100"
+          src="https://construct-static.com/images/v860/r/global/construct-3-logo-lettering_v130.png"
+          width="100"
+        />
+      </div>
+
+      <v-spacer></v-spacer>
+      <v-text-field
+        style="margin-top: 28px; margin-right: 15px"
+        v-model="search"
+        label="Search"
+        color="primary"
+        outlined
+        append-icon="mdi-magnify"
+        rounded
+      ></v-text-field>
+
+      <v-layout column style="flex: unset;">
+        <v-dialog v-model="filterDialog" max-width="500px">
+          <template v-slot:activator="{ on }"
+            ><v-btn
+              color="error"
+              v-on="on"
+              style="width:160px; margin-top: 10px"
+              @click="filterDialog = true"
+            >
+              <span class="mr-2 text">Filter</span>
+              <v-icon>mdi-filter-variant</v-icon>
+            </v-btn>
+          </template>
+
+          <v-card color="accent" dark>
+            <v-card-title>
+              <span class="text" style="text-align: center; width: 100%">
+                Filter <v-icon>mdi-filter-variant</v-icon>
+              </span>
+            </v-card-title>
+            <v-card-title>
+              <span class="text">
+                Engine
+              </span>
+            </v-card-title>
+            <v-card-text
+              style="display:flex; justify-content: center; width: 100%; padding-left: 50px;"
+            >
+              <v-btn-toggle
+                v-model="selectedEngines"
+                multiple
+                color="primary"
+                rounded
+                dark
+              >
+                <v-btn dark>
+                  <EngineIcon
+                    _style="cursor:pointer"
+                    engine="CC"
+                    :forceDark="true"
+                  /> </v-btn
+                ><v-btn dark>
+                  <EngineIcon
+                    _style="cursor:pointer"
+                    engine="C2"
+                    :forceDark="true"
+                  /> </v-btn
+                ><v-btn dark>
+                  <EngineIcon
+                    _style="cursor:pointer"
+                    engine="C3"
+                    :forceDark="true"
+                  />
+                </v-btn>
+              </v-btn-toggle>
+              <v-btn text icon color="black" disabled> </v-btn>
+            </v-card-text>
+            <!-- <v-card-title>
+              <span class="text">
+                Tags
+              </span>
+            </v-card-title> -->
+            <v-card-title>
+              <span class="text">
+                Platforms
+              </span>
+            </v-card-title>
+            <v-card-text
+              style="display:flex; justify-content: center; width: 100%; padding-left: 50px;"
+            >
+              <v-btn-toggle
+                v-model="selectedPlatforms"
+                multiple
+                color="primary"
+                rounded
+                dark
+              >
+                <v-btn v-for="(platform, i) in platformIconsList" dark :key="i">
+                  <PlatformIcon
+                    _style="cursor:pointer"
+                    :platform="platform"
+                    :forceDark="true"
+                  />
+                </v-btn>
+              </v-btn-toggle>
+              <v-btn text icon color="black" disabled> </v-btn>
+            </v-card-text>
+
+            <v-card-text
+              style="display:flex; justify-content: center; width: 100%; padding-left: 50px;"
+            >
+              <v-checkbox
+                label="Show Work in progress"
+                v-model="showWIP"
+              ></v-checkbox>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
+        <v-btn text small style="width:160px; ">
+          <span class="mr-2 text">Submit new game</span>
+        </v-btn>
+      </v-layout>
+
+      <v-btn @click="toggleDarkMode" icon>
+        <v-icon>mdi-brightness-6</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-main>
+      <div class="slantedBackground">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <v-layout
+        row
+        wrap
+        justify-center
+        style=" padding-top: 30px; margin-top: 0px; margin-left: 80px; margin-right: 80px; z-index:1; padding-bottom: 80px;  height: calc(100vh - 90px); overflow:auto"
+        ref="scrollZone"
+      >
+        <v-lazy
+          :options="{
+            threshold: 0.5,
+          }"
+          min-height="200"
+          transition="fade-transition"
+          v-for="i in computedMaxCount"
+          :key="i + currentStart"
+        >
+          <GameCard :gameData="filteredData[i + currentStart - 1]" />
+        </v-lazy>
+      </v-layout>
+    </v-main>
+    <v-footer app dark color="accent" class="footer" height="30">
+      <v-spacer></v-spacer>
+      <span class="text footerText">
+        Made with ❤ by the
+        <a href="https://discord.com/invite/HyvYes8" target="__blank"
+          >Construct Community</a
+        >
+      </span>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import GameCard from "./components/GameCard";
+import PlatformIcon from "./components/PlatformIcon";
+import EngineIcon from "./components/EngineIcon";
+import platformIcons from "./components/platformToIcons";
 
 export default {
-  name: 'App',
+  name: "App",
+
   components: {
-    HelloWorld
-  }
-}
+    GameCard,
+    PlatformIcon,
+    EngineIcon,
+  },
+
+  data: () => ({
+    filterDialog: false,
+    currentStart: 0,
+    maxCount: 30,
+    maxOffset: 6,
+    search: "",
+    cachedData: "",
+    data: [],
+    filteredData: [],
+    computedMaxCount: 0,
+    platformIconsList: [],
+    selectedPlatforms: [],
+    selectedEngines: [],
+    showWIP: true,
+  }),
+  watch: {
+    search() {
+      this.updateFilteredData();
+    },
+    selectedPlatforms() {
+      this.updateFilteredData();
+    },
+    selectedEngines() {
+      this.updateFilteredData();
+    },
+    showWIP() {
+      this.updateFilteredData();
+    },
+  },
+  computed: {
+    dark() {
+      return this.$vuetify.theme.dark;
+    },
+    elementCount() {
+      return this.filteredData.length;
+    },
+    isNotAtTop() {
+      return this.currentStart > 0;
+    },
+    isNotAtBottom() {
+      return this.currentStart + this.maxCount < this.elementCount;
+    },
+    scrollUpOffset() {
+      return Math.min(this.maxOffset, this.currentStart);
+    },
+    scrollDownOffset() {
+      return Math.min(
+        this.maxOffset,
+        this.elementCount - (this.currentStart + this.maxCount)
+      );
+    },
+  },
+  mounted() {
+    this.scroll();
+    this.loadData();
+    this.platformIconsList = Object.keys(platformIcons);
+  },
+  methods: {
+    toggleDarkMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    },
+    scroll() {
+      let element = this.$refs.scrollZone;
+      element.onscroll = () => {
+        let scrollPercentage =
+          (100 * element.scrollTop) /
+          (element.scrollHeight - element.clientHeight);
+        if (scrollPercentage === 100 && this.isNotAtBottom) {
+          let scrollOffset = this.scrollDownOffset;
+
+          console.log(scrollOffset, this.currentStart);
+
+          this.currentStart += scrollOffset;
+
+          console.log(scrollPercentage);
+
+          scrollPercentage = 100 - (100 * scrollOffset) / this.maxCount;
+
+          console.log(scrollPercentage);
+
+          element.scrollTop =
+            ((element.scrollHeight - element.clientHeight) * scrollPercentage) /
+            100;
+        }
+        if (scrollPercentage === 0 && this.isNotAtTop) {
+          //eslint-disable-next-line
+          //debugger;
+          let scrollOffset = this.scrollUpOffset;
+
+          console.log(scrollOffset, this.currentStart);
+
+          this.currentStart -= scrollOffset;
+
+          console.log(scrollPercentage);
+
+          scrollPercentage = (0.01 * (100 * scrollOffset)) / this.maxCount;
+
+          console.log(scrollPercentage);
+
+          element.scrollTop =
+            ((element.scrollHeight - element.clientHeight) * scrollPercentage) /
+            100;
+        }
+      };
+    },
+    updateFilteredData() {
+      // Search bar filter
+      if (this.search === "") {
+        this.filteredData = this.data;
+      } else {
+        this.filteredData = this.data.filter((x) => {
+          return (
+            x.name.toLowerCase().includes(this.search.toLowerCase()) ||
+            x.authorName.toLowerCase().includes(this.search.toLowerCase())
+          );
+        });
+      }
+
+      // Work In Progress Filter
+      if (!this.showWIP)
+        this.filteredData = this.filteredData.filter((x) => {
+          return !x.isWIP;
+        });
+
+      // Engines Filter
+      let engines = ["CC", "C2", "C3"];
+      if (this.selectedEngines.length > 0)
+        this.filteredData = this.filteredData.filter((x) => {
+          return this.selectedEngines.includes(
+            engines.findIndex((engine) => {
+              return engine === x.engine;
+            })
+          );
+        });
+
+      // Platform Filter
+      let platforms = this.platformIconsList;
+      if (this.selectedPlatforms.length > 0)
+        this.filteredData = this.filteredData.filter((x) => {
+          for (let i = 0; i < this.selectedPlatforms.length; i++) {
+            const platform = platforms[this.selectedPlatforms[i]];
+            if (!x.platforms[platform]) return false;
+          }
+          return true;
+        });
+
+      this.computedMaxCount = Math.min(this.elementCount, this.maxCount);
+    },
+    loadData() {
+      let url =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vQNLnCS4XBcXIVJ6M-rUtWV_zdpzK0VVR5ToGwuGkptschaT9Oa1SAAtZPhw8JlL2XObNSZKQBJNSC0/pub?output=tsv";
+      fetch(url).then(async (response) => {
+        this.cachedData = await response.text();
+        let array = this.tsvToArray(this.cachedData);
+        let keys = array[0];
+        array = array.slice(1);
+
+        this.data = [];
+        array.forEach((element) => {
+          let obj = {};
+          for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            obj[key] = element[i];
+          }
+          if (obj.name) this.data.push(obj);
+        });
+        this.formatData();
+        this.updateFilteredData();
+      });
+    },
+    formatData() {
+      this.data = this.data.map((element) => {
+        return {
+          name: element.name,
+          image: element["image link"],
+          platforms: {
+            steam: element.steam,
+            itchio: element.itchio,
+            switch: element.switch,
+            playstation: element.playstation,
+            xbox: element.xbox,
+            android: element.android,
+            ios: element.ios,
+            web: element.web,
+          },
+          authorImage: element["author image"],
+          authorName: element["author"],
+          authorURL: element["author website"],
+          engine: element["engine"],
+          isWIP: element["Work In Progress"] === "TRUE",
+          tags: [""],
+        };
+      });
+    },
+    tsvToArray(tsv) {
+      let tempArr = tsv.split("\n");
+      return tempArr.map((x) => x.split("\t").map((x) => x.trim()));
+    },
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+html {
+  background-color: var(--v-secondary-base);
+}
+body,
+html {
+  font-family: "Roboto", sans-serif !important;
+  font-weight: normal !important;
+  overflow: hidden;
+}
+a {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.v-application {
+  z-index: -10;
+}
+.footerText {
+  font-size: 10.5pt;
+}
+.text {
+  font-family: "Roboto", sans-serif !important;
+  font-weight: normal !important;
+}
+.topBar {
+  filter: drop-shadow(0px 10px 17px rgba(0, 0, 0, 0.3));
+}
+.footer {
+  filter: drop-shadow(0px -10px 17px rgba(0, 0, 0, 0.3));
+}
+/**************************
+    SLANTED BACKGROUND
+***************************/
+.slantedBackground {
+  box-shadow: inset 0px -10px 34px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  width: 100%;
+  height: 900px;
+  position: absolute;
+  -webkit-transform-origin: 0;
+  transform-origin: 0;
+  z-index: -1;
+  background-size: 150% 150%;
+  background-image: linear-gradient(-20deg, #b721ff 0%, #21d4fd 100%);
+  top: 0;
+  left: 0;
+  -ms-transform: skewY(-16deg);
+  -webkit-transform: skewY(-16deg);
+  transform: skewY(-16deg);
+  animation-name: slantedBackground;
+  animation-iteration-count: infinite;
+  animation-duration: 5s;
+}
+@keyframes slantedBackground {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 50% 50%;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+.slantedBackground span {
+  position: absolute;
+  width: 33.33333%;
+  height: 120px;
+}
+.slantedBackground span:first-child {
+  left: -16.66666%;
+  background: #38b8fd;
+}
+.slantedBackground span:nth-child(2) {
+  top: 0;
+  left: 16.66666%;
+  right: auto;
+  background: #3899fd;
+}
+.slantedBackground span:nth-child(3) {
+  width: 100%;
+  left: 49.99999%;
+  bottom: auto;
+  background: #67befb;
+}
+.slantedBackground span:nth-child(4) {
+  right: -16.66666%;
+  background: #b37fff;
+  bottom: 0;
+}
+.slantedBackground span:nth-child(5) {
+  bottom: 0;
+  background: rgba(146, 78, 255, 0.15);
+}
+.slantedBackground span:nth-child(6) {
+  bottom: 120px;
+  left: 11%;
+  height: 30%;
+  width: 40%;
+  min-width: 400px;
+}
+@media screen and (max-width: 800px) {
+  .slantedBackground span:first-child {
+    left: 0;
+    width: 66.666666%;
+  }
+  .slantedBackground span:nth-child(2) {
+    left: 66.666666%;
+    width: 33.33333%;
+  }
+  .slantedBackground span:nth-child(3) {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  .slantedBackground {
+    height: 1000px;
+  }
+}
+@media screen and (min-width: 2500px) {
+  .slantedBackground {
+    height: 1100px;
+  }
+}
+::-webkit-scrollbar-button:start {
+  background: #00000000;
+  height: 20px;
+}
+::-webkit-scrollbar-button:end {
+  background: #00000000;
+  height: 53px;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e0e0e086;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cccccc86;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff00;
+  border-radius: 8px;
 }
 </style>
