@@ -1,42 +1,55 @@
 <template>
-  <div :style="_style" class="noBackground" @click="$emit('click')">
-    <div v-if="engine === 'CC'">
-      <v-img
-        v-if="!(dark || forceDark)"
-        class="engineIcon"
-        :src="require('@/assets/cc.png')"
-      ></v-img>
-      <v-img
-        v-else
-        class="engineIcon"
-        :src="require('@/assets/cc white.png')"
-      ></v-img>
-    </div>
-    <div v-else-if="engine === 'C2'">
-      <v-img
-        v-if="!(dark || forceDark)"
-        class="engineIcon"
-        :src="require('@/assets/c2.png')"
-      ></v-img>
-      <v-img
-        v-else
-        class="engineIcon"
-        :src="require('@/assets/c2 white.png')"
-      ></v-img>
-    </div>
-    <div v-else-if="engine === 'C3'">
-      <v-img
-        v-if="!(dark || forceDark)"
-        class="engineIcon"
-        :src="require('@/assets/c3.png')"
-      ></v-img>
-      <v-img
-        v-else
-        class="engineIcon"
-        :src="require('@/assets/c3 white.png')"
-      ></v-img>
-    </div>
-  </div>
+  <v-tooltip bottom>
+    <template v-slot:activator="{ on, attrs }">
+      <div
+        v-bind="attrs"
+        v-on="on"
+        :style="_style"
+        class="noBackground"
+        @click="$emit('click')"
+      >
+        <div v-if="engine === 'CC'">
+          <v-img
+            v-if="!(dark || forceDark)"
+            class="engineIcon"
+            :src="require('@/assets/cc.png')"
+          ></v-img>
+          <v-img
+            v-else
+            class="engineIcon"
+            :src="require('@/assets/cc white.png')"
+          ></v-img>
+        </div>
+        <div v-else-if="engine === 'C2'">
+          <v-img
+            v-if="!(dark || forceDark)"
+            class="engineIcon"
+            :src="require('@/assets/c2.png')"
+          ></v-img>
+          <v-img
+            v-else
+            class="engineIcon"
+            :src="require('@/assets/c2 white.png')"
+          ></v-img>
+        </div>
+        <div v-else-if="engine === 'C3'">
+          <v-img
+            v-if="!(dark || forceDark)"
+            class="engineIcon"
+            :src="require('@/assets/c3.png')"
+          ></v-img>
+          <v-img
+            v-else
+            class="engineIcon"
+            :src="require('@/assets/c3 white.png')"
+          ></v-img>
+        </div>
+      </div>
+    </template>
+    <span style="text-transform: capitalize;">
+      {{ engineToFullName[engine] }}
+    </span>
+  </v-tooltip>
 </template>
 
 <script>
@@ -63,7 +76,13 @@ export default {
       return this.$vuetify.theme.dark;
     },
   },
-  data: () => ({}),
+  data: () => ({
+    engineToFullName: {
+      CC: "Construct Classic",
+      C2: "Construct 2",
+      C3: "Construct 3",
+    },
+  }),
   methods: {},
 };
 </script>

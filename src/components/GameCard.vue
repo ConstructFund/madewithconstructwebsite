@@ -7,13 +7,21 @@
       :src="gameData.image"
     >
     </v-img>
-
+    <div v-if="gameData.isWIP" class="ribbon ribbon-top-right wip-ribbon">
+      <span>Work in progress</span>
+    </div>
+    <div v-if="gameData.isEA" class="ribbon ribbon-top-right ea-ribbon">
+      <span>Early access</span>
+    </div>
+    <div v-if="gameData.isNSFW" class="ribbon ribbon-top-right nsfw-ribbon">
+      <span>NSFW</span>
+    </div>
     <v-badge
       inline
       color="error"
       content="Work in progress"
-      :value="gameData.isWIP"
-      style="margin-right: 2px;"
+      :value="false"
+      style="margin-right: 0px;"
     >
       <span class="text name">
         <FitText>{{ gameData.name }}</FitText>
@@ -124,5 +132,82 @@ body,
   margin-left: 13px !important;
   margin-top: 5px !important;
   opacity: 0.3;
+}
+.ribbon {
+  width: 140px;
+  height: 140px;
+  overflow: hidden;
+  position: absolute;
+}
+
+.ribbon::before,
+.ribbon::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  display: block;
+  border: 5px solid #f9a825;
+}
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 225px;
+  padding: 7px 0;
+  background-color: #f9a825;
+  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  font: 500 16px/1 "Roboto", sans-serif;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.nsfw-ribbon span {
+  background-color: #f925f9;
+  font-size: 10pt;
+}
+.nsfw-ribbon::before,
+.nsfw-ribbon::after {
+  border: 5px solid #b91bb9;
+}
+.wip-ribbon span {
+  background-color: var(--v-error-base);
+  font-size: 10pt;
+}
+.wip-ribbon::before,
+.wip-ribbon::after {
+  border: 5px solid var(--v-error-darken1);
+}
+.ea-ribbon span {
+  background-color: #2588f9;
+  font-size: 10pt;
+}
+.ea-ribbon::before,
+.ea-ribbon::after {
+  border: 5px solid #1e6fcc;
+}
+
+/* top right*/
+.ribbon-top-right {
+  top: -10px;
+  right: -10px;
+}
+.ribbon-top-right::before,
+.ribbon-top-right::after {
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+.ribbon-top-right::before {
+  top: 0;
+  left: 11px;
+}
+.ribbon-top-right::after {
+  bottom: 11px;
+  right: 0;
+}
+.ribbon-top-right span {
+  left: -27px;
+  top: 42px;
+  transform: rotate(45deg);
 }
 </style>

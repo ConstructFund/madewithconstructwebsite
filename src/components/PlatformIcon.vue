@@ -1,26 +1,33 @@
 <template>
-  <div :style="_style" @click="$emit('click')">
-    <v-img
-      v-if="platform === 'itchio' && !(dark || forceDark)"
-      height="23"
-      width="23"
-      style="margin-left: 1px; margin-right: 1px; margin-top: 2px"
-      :src="require('@/assets/itchio.png')"
-    ></v-img>
-    <v-img
-      v-else-if="platform === 'itchio'"
-      height="23"
-      width="23"
-      style="margin-left: 1px; margin-right: 1px; margin-top: 2px"
-      :src="require('@/assets/itchio white.png')"
-    ></v-img>
-    <v-icon
-      :dark="dark || forceDark"
-      :color="dark || forceDark ? 'white' : 'black'"
-      v-else
-      >{{ platformIcons[platform] }}</v-icon
-    >
-  </div>
+  <v-tooltip bottom>
+    <template v-slot:activator="{ on, attrs }">
+      <div v-bind="attrs" v-on="on" :style="_style" @click="$emit('click')">
+        <v-img
+          v-if="platform === 'itchio' && !(dark || forceDark)"
+          height="23"
+          width="23"
+          style="margin-left: 1px; margin-right: 1px; margin-top: 2px"
+          :src="require('@/assets/itchio.png')"
+        ></v-img>
+        <v-img
+          v-else-if="platform === 'itchio'"
+          height="23"
+          width="23"
+          style="margin-left: 1px; margin-right: 1px; margin-top: 2px"
+          :src="require('@/assets/itchio white.png')"
+        ></v-img>
+        <v-icon
+          :dark="dark || forceDark"
+          :color="dark || forceDark ? 'white' : 'black'"
+          v-else
+          >{{ platformIcons[platform] }}</v-icon
+        >
+      </div>
+    </template>
+    <span style="text-transform: capitalize;">
+      {{ platform }}
+    </span>
+  </v-tooltip>
 </template>
 
 <script>
