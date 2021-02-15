@@ -572,14 +572,25 @@ export default {
             scrollPercentage =
               (100 * element.scrollTop) /
               (element.scrollHeight - element.clientHeight);
+            this.updateBackToTopButton();
             this.showScrollToTop =
               scrollPercentage > 2 || this.currentStart > 0;
           }, 10);
         }
-        this.showScrollToTop = scrollPercentage > 2 || tempStart > 0;
+        this.updateBackToTopButton(tempStart);
       };
     },
+    updateBackToTopButton(start) {
+      let element = this.$refs.scrollZone;
+      let scrollPercentage =
+        (100 * element.scrollTop) /
+        (element.scrollHeight - element.clientHeight);
+      let tempStart = start || this.currentStart;
+      this.showScrollToTop = scrollPercentage > 2 || tempStart > 0;
+    },
     updateFilteredData() {
+      this.currentStart = 0;
+      this.updateBackToTopButton();
       this.filteredData = this.data.filter((x) => {
         //Special search cases
         let search = this.search.toLowerCase();
