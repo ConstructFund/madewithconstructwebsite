@@ -10,6 +10,7 @@
       </h2>
       <div class="d-flex align-center">
         <v-img
+          v-if="$vuetify.breakpoint.smAndUp"
           alt="Construct Logo"
           class="shrink mr-2"
           contain
@@ -32,6 +33,17 @@
       </div>
 
       <v-spacer v-if="$vuetify.breakpoint.lgAndUp"></v-spacer>
+      <v-btn
+        v-if="$vuetify.breakpoint.xs"
+        color="secondary"
+        v-on="on"
+        icon
+        outlined
+        style="width: 56px; height: 56px; margin-right: 15px"
+        @click="drawer = !drawer"
+      >
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
       <v-text-field
         style="margin-top: 28px; margin-right: 15px"
         v-model="search"
@@ -42,6 +54,7 @@
         rounded
       ></v-text-field>
       <v-select
+        v-if="$vuetify.breakpoint.smAndUp"
         v-model="sortMethod"
         :items="sortMethods"
         item-text="state"
@@ -50,7 +63,6 @@
         color="error"
         item-color="error"
         return-object
-        single-line
         outlined
         rounded
         style="margin-top: 28px; margin-right: 15px; width: 80px"
@@ -58,22 +70,40 @@
 
       <v-layout column style="flex: unset;">
         <v-dialog v-model="filterDialog" max-width="500px">
-          <template v-slot:activator="{ on }"
-            ><v-btn
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-if="$vuetify.breakpoint.smAndUp"
               color="error"
               v-on="on"
               style="width:160px; margin-top: 10px"
               @click="filterDialog = true"
             >
-              <span class="mr-2 text">Filter</span>
+              <span class="mr-2 text">
+                Filter
+              </span>
               <v-icon>mdi-filter-variant</v-icon>
+            </v-btn>
+            <v-btn
+              v-else
+              color="error"
+              v-on="on"
+              icon
+              outlined
+              style="width: 56px; height: 56px; margin-right: 4px"
+              @click="filterDialog = true"
+            >
+              <v-icon>mdi-filter</v-icon>
             </v-btn>
           </template>
 
           <v-card color="accent" dark>
             <v-card-title>
               <span class="text" style="text-align: center; width: 100%">
-                Filter <v-icon>mdi-filter-variant</v-icon>
+                Filter
+                <v-icon v-if="$vuetify.breakpoint.smAndUp"
+                  >mdi-filter-variant</v-icon
+                >
+                <v-icon v-else>mdi-filter</v-icon>
               </span>
             </v-card-title>
             <v-card-title>
@@ -88,8 +118,8 @@
                 v-model="selectedEngines"
                 multiple
                 color="primary"
-                rounded
                 dark
+                :rounded="$vuetify.breakpoint.smAndUp"
               >
                 <v-btn dark>
                   <EngineIcon
@@ -132,10 +162,20 @@
                 v-model="selectedPlatforms"
                 multiple
                 color="primary"
-                rounded
+                :rounded="$vuetify.breakpoint.smAndUp"
                 dark
+                :style="
+                  $vuetify.breakpoint.smAndUp
+                    ? 'width: 384px;'
+                    : 'flex-wrap: wrap; justify-content: center; width: 192px'
+                "
               >
-                <v-btn v-for="(platform, i) in platformIconsList" dark :key="i">
+                <v-btn
+                  v-for="(platform, i) in platformIconsList"
+                  dark
+                  :key="i"
+                  style="width: 48px"
+                >
                   <PlatformIcon
                     _style="cursor:pointer"
                     :platform="platform"
@@ -164,16 +204,80 @@
           </v-card>
         </v-dialog>
 
-        <v-btn text small style="width:160px; ">
+        <v-btn
+          text
+          small
+          style="width:160px;"
+          v-if="$vuetify.breakpoint.smAndUp"
+          @click="submitNewGame"
+        >
           <span class="mr-2 text">Submit new game</span>
         </v-btn>
       </v-layout>
 
-      <v-btn @click="toggleDarkMode" icon>
+      <v-btn @click="toggleDarkMode" icon v-if="$vuetify.breakpoint.smAndUp">
         <v-icon>mdi-brightness-6</v-icon>
       </v-btn>
     </v-app-bar>
+    <v-navigation-drawer
+      v-if="$vuetify.breakpoint.xs"
+      v-model="drawer"
+      app
+      temporary
+      color="accent"
+      dark
+    >
+      <v-layout row align-center justify-center style="margin-top: 10px">
+        <h3 class="mr-2 text white--text">
+          Made with
+        </h3>
+        <span class="d-flex align-center">
+          <v-img
+            alt="Construct Logo"
+            class="shrink mr-2"
+            contain
+            src="https://construct-static.com/images/v860/r/global/construct-3-logo_v43.png"
+            transition="scale-transition"
+            width="20"
+          />
 
+          <v-img
+            alt="Construct Name"
+            contain
+            class="shrink mr-2"
+            src="https://construct-static.com/images/v860/r/global/construct-3-logo-lettering_v130.png"
+            width="88"
+          />
+        </span>
+      </v-layout>
+
+      <v-select
+        v-model="sortMethod"
+        :items="sortMethods"
+        item-text="state"
+        item-value="abbr"
+        color="error"
+        label="Sort by"
+        item-color="error"
+        return-object
+        outlined
+        rounded
+        style="margin-top: 28px; margin-right: 15px;  margin-left: 10px; "
+      ></v-select>
+      <v-btn text block @click="submitNewGame">
+        <span class="mr-2 text">Submit new game</span>
+        <v-icon right dark>
+          mdi-plus
+        </v-icon>
+      </v-btn>
+
+      <v-btn @click="toggleDarkMode" block text>
+        <span class="mr-2 text">Toggle theme</span>
+        <v-icon right dark>
+          mdi-brightness-6
+        </v-icon>
+      </v-btn>
+    </v-navigation-drawer>
     <v-main>
       <div class="slantedBackground">
         <span></span>
@@ -231,8 +335,44 @@
         </v-btn>
       </v-fab-transition>
     </v-main>
-    <v-footer app dark color="accent" class="footer" height="30">
-      <v-tooltip right>
+    <v-footer
+      app
+      dark
+      color="accent"
+      class="footer"
+      height="30"
+      style="padding-top: 0; padding-bottom: 0"
+    >
+      <v-dialog
+        v-model="infoDialog"
+        max-width="500px"
+        v-if="$vuetify.breakpoint.xs"
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn
+            color="secondary"
+            icon
+            small
+            dark
+            v-bind="attrs"
+            v-on="on"
+            style="margin: 0; height: 18px; width: 18px"
+          >
+            <v-icon v-on="on" v-bind="attrs">mdi-information</v-icon>
+          </v-btn>
+        </template>
+
+        <v-card color="accent" dark style="padding: 20px">
+          <small>
+            This website is only meant to showcase games made with Construct.
+            <br />
+            Any views shared by any developers belong solely to the their own
+            and not the creators of this website.
+          </small>
+        </v-card>
+      </v-dialog>
+
+      <v-tooltip right v-else>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             color="secondary"
@@ -253,24 +393,42 @@
           not the creators of this website.
         </small>
       </v-tooltip>
-      <!-- TODO Replace the text with something better -->
 
       <v-spacer></v-spacer>
-      <span class="text footerText">
-        Contribute on
-        <a
-          href="https://github.com/skymen/madewithconstructwebsite"
-          target="__blank"
-        >
-          Github
-        </a>
+      <span v-if="$vuetify.breakpoint.smAndUp">
+        <span class="text footerText">
+          Contribute on
+          <a
+            href="https://github.com/skymen/madewithconstructwebsite"
+            target="__blank"
+          >
+            Github
+          </a>
+        </span>
+        <span style="margin-left: 5px; margin-right: 5px">--</span>
+        <span class="text footerText">
+          Made with ❤ by the
+          <a href="https://discord.com/invite/HyvYes8" target="__blank">
+            Construct Community
+          </a>
+        </span>
       </span>
-      <span style="margin-left: 5px; margin-right: 5px">--</span>
-      <span class="text footerText">
-        Made with ❤ by the
-        <a href="https://discord.com/invite/HyvYes8" target="__blank">
-          Construct Community
-        </a>
+      <span v-else>
+        <span class="text footerText">
+          <a
+            href="https://github.com/skymen/madewithconstructwebsite"
+            target="__blank"
+          >
+            Contribute
+          </a>
+        </span>
+        <span style="margin-left: 5px; margin-right: 5px">--</span>
+        <span class="text footerText">
+          Made with ❤ by
+          <a href="https://discord.com/invite/HyvYes8" target="__blank">
+            CC
+          </a>
+        </span>
       </span>
     </v-footer>
   </v-app>
@@ -293,6 +451,8 @@ export default {
 
   data: () => ({
     filterDialog: false,
+    infoDialog: false,
+    drawer: false,
     currentStart: 0,
     maxCount: 30,
     maxOffset: 6,
@@ -543,6 +703,9 @@ export default {
       let element = this.$refs.scrollZone;
       this.currentStart = 0;
       element.scrollTop = 0;
+    },
+    submitNewGame() {
+      return;
     },
   },
 };
