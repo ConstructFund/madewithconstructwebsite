@@ -1,5 +1,11 @@
 <template>
-  <v-card color="secondary" :width="400" :height="300" :style="shadowStyle">
+  <v-card
+    v-if="$vuetify.breakpoint.mdAndUp"
+    color="secondary"
+    :width="400"
+    :height="300"
+    :style="shadowStyle"
+  >
     <v-img
       height="173"
       width="370"
@@ -50,8 +56,72 @@
         height="25"
         width="25"
         style="margin-left: 12px;border-radius: 15px; max-height: 25px; max-width: 25px"
+        class="authorImage"
         :src="gameData.authorImage"
-      ></v-img>
+      />
+      <span class="text author"> by {{ gameData.authorName }} </span>
+    </div>
+  </v-card>
+  <v-card
+    v-else
+    color="secondary"
+    :width="270"
+    :height="270"
+    :style="shadowStyle"
+  >
+    <v-img
+      height="117"
+      width="250"
+      style="border-radius: 10px; left: 3.75%; right: 3.75%; top:3.75%; margin-bottom: 20px"
+      :src="gameData.image"
+    >
+    </v-img>
+    <div v-if="gameData.isWIP" class="ribbon ribbon-top-right wip-ribbon">
+      <span>Work in progress</span>
+    </div>
+    <div v-if="gameData.isEA" class="ribbon ribbon-top-right ea-ribbon">
+      <span>Early access</span>
+    </div>
+    <div v-if="gameData.isNSFW" class="ribbon ribbon-top-right nsfw-ribbon">
+      <span>NSFW</span>
+    </div>
+    <v-badge
+      inline
+      color="error"
+      content="Work in progress"
+      :value="false"
+      style="margin-right: 10px;"
+    >
+      <span class="text name">
+        <FitText>{{ gameData.name }}</FitText>
+      </span>
+    </v-badge>
+    <EngineIcon
+      _style="cursor:pointer; position: absolute; right: 10px; bottom: 10px; opacity: 0.3"
+      :engine="gameData.engine"
+      @click="openEngine()"
+    />
+    <br />
+    <v-layout row class="platforms">
+      <PlatformIcon
+        v-for="(platform, i) in platforms"
+        :key="i"
+        _style="cursor:pointer"
+        @click="openPlatform(platform)"
+        :platform="platform"
+      />
+    </v-layout>
+    <div
+      style="display:inline-flex; flex-direction: row; margin-top: 10px; cursor:pointer"
+      @click="openWebsite()"
+    >
+      <v-img
+        height="25"
+        width="25"
+        style="margin-left: 12px;border-radius: 15px; max-height: 25px; max-width: 25px"
+        class="authorImage"
+        :src="gameData.authorImage"
+      />
       <span class="text author"> by {{ gameData.authorName }} </span>
     </div>
   </v-card>
@@ -123,10 +193,18 @@ body,
   height: 34px;
   margin-left: 14px;
 }
+.authorImage {
+  position: absolute;
+  left: 1px;
+  bottom: 11px;
+}
 .author {
+  position: absolute;
+  left: 38px;
+  bottom: 8px;
   opacity: 0.5;
   font-size: 14pt;
-  margin-left: 5px !important;
+  /* margin-left: 5px !important; */
 }
 .platforms {
   margin-left: 13px !important;
