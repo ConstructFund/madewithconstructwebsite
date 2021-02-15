@@ -36,7 +36,6 @@
       <v-btn
         v-if="$vuetify.breakpoint.xs"
         color="secondary"
-        v-on="on"
         icon
         outlined
         style="width: 56px; height: 56px; margin-right: 15px"
@@ -354,11 +353,10 @@
             icon
             small
             dark
-            v-bind="attrs"
             v-on="on"
             style="margin: 0; height: 18px; width: 18px"
           >
-            <v-icon v-on="on" v-bind="attrs">mdi-information</v-icon>
+            <v-icon>mdi-information</v-icon>
           </v-btn>
         </template>
 
@@ -383,7 +381,7 @@
             v-on="on"
             style="margin: 0; height: 18px; width: 18px"
           >
-            <v-icon v-on="on" v-bind="attrs">mdi-information</v-icon>
+            <v-icon>mdi-information</v-icon>
           </v-btn>
         </template>
         <small>
