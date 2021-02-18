@@ -232,10 +232,8 @@ body,
   width: 225px;
   padding: 7px 0;
   background-color: #f9a825;
-  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
   color: #fff;
   font: 500 16px/1 "Roboto", sans-serif;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   text-transform: uppercase;
   text-align: center;
 }
@@ -268,7 +266,7 @@ body,
 /* top right*/
 .ribbon-top-right {
   top: -10px;
-  right: -10px;
+  left: -10px;
 }
 .ribbon-top-right::before,
 .ribbon-top-right::after {
@@ -277,15 +275,17 @@ body,
 }
 .ribbon-top-right::before {
   top: 0;
-  left: 11px;
+  right: 11px;
+  transform: rotate(-90deg);
 }
 .ribbon-top-right::after {
   bottom: 11px;
-  right: 0;
+  left: 0;
+  transform: rotate(-90deg);
 }
 .ribbon-top-right span {
-  left: -27px;
+  right: -27px;
   top: 42px;
-  transform: rotate(45deg);
+  transform: rotate(-45deg);
 }
 </style>
