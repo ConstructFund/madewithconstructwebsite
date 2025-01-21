@@ -758,10 +758,10 @@ a:hover {
 
 @media (min-width: 1080px) {
   .mainView {
-    padding-top: 30px;
+    padding-top: 10px;
     margin-top: 0px;
-    margin-left: 80px;
-    margin-right: 80px;
+    margin-left: 30px;
+    margin-right: 30px;
     z-index: 1;
     padding-bottom: 80px;
     height: calc(100vh - 90px);
