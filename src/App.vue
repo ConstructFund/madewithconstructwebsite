@@ -548,7 +548,7 @@ export default {
           (100 * element.scrollTop) /
           (element.scrollHeight - element.clientHeight);
         let tempStart = this.currentStart;
-        if (scrollPercentage === 100 && this.isNotAtBottom) {
+        if (scrollPercentage >= 99 && this.isNotAtBottom) {
           let scrollOffset = this.scrollDownOffset;
           this.currentStart += scrollOffset;
           scrollPercentage = 100 - (100 * scrollOffset) / this.maxCount;
@@ -556,7 +556,7 @@ export default {
             ((element.scrollHeight - element.clientHeight) * scrollPercentage) /
             100;
         }
-        if (scrollPercentage === 0 && this.isNotAtTop) {
+        if (scrollPercentage <= 1 && this.isNotAtTop) {
           //eslint-disable-next-line
           //debugger;
           let scrollOffset = this.scrollUpOffset;
