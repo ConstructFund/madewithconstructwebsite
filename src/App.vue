@@ -548,7 +548,7 @@ export default {
           (100 * element.scrollTop) /
           (element.scrollHeight - element.clientHeight);
         let tempStart = this.currentStart;
-        if (scrollPercentage === 100 && this.isNotAtBottom) {
+        if (scrollPercentage >= 99 && this.isNotAtBottom) {
           let scrollOffset = this.scrollDownOffset;
           this.currentStart += scrollOffset;
           scrollPercentage = 100 - (100 * scrollOffset) / this.maxCount;
@@ -556,7 +556,7 @@ export default {
             ((element.scrollHeight - element.clientHeight) * scrollPercentage) /
             100;
         }
-        if (scrollPercentage === 0 && this.isNotAtTop) {
+        if (scrollPercentage <= 1 && this.isNotAtTop) {
           //eslint-disable-next-line
           //debugger;
           let scrollOffset = this.scrollUpOffset;
@@ -758,10 +758,10 @@ a:hover {
 
 @media (min-width: 1080px) {
   .mainView {
-    padding-top: 30px;
+    padding-top: 10px;
     margin-top: 0px;
-    margin-left: 80px;
-    margin-right: 80px;
+    margin-left: 30px;
+    margin-right: 30px;
     z-index: 1;
     padding-bottom: 80px;
     height: calc(100vh - 90px);
