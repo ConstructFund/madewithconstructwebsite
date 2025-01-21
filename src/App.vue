@@ -475,8 +475,8 @@ export default {
       "Loading more than you'd think",
       "Awesome construct stuff",
     ],
-    sortMethod: "A - Z",
-    sortMethods: ["A - Z", "Z - A"],
+    sortMethod: "Random",
+    sortMethods: ["A - Z", "Z - A", "Random"],
   }),
   watch: {
     search() {
@@ -653,6 +653,10 @@ export default {
         this.filteredData.sort((b, a) => {
           return a.name.localeCompare(b.name);
         });
+      }
+      // Random
+      if (this.sortMethod === this.sortMethods[2]) {
+        this.filteredData.sort(() => Math.random() - 0.5);
       }
     },
     loadData() {
