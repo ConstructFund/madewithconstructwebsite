@@ -74,7 +74,7 @@
               v-if="$vuetify.breakpoint.smAndUp"
               color="error"
               v-on="on"
-              style="width:160px; margin-top: 10px"
+              style="width:160px;"
               @click="filterDialog = true"
             >
               <span class="mr-2 text">
@@ -207,7 +207,7 @@
           text
           small
           style="width:160px;"
-          v-if="$vuetify.breakpoint.smAndUp"
+          v-if="false && $vuetify.breakpoint.smAndUp"
           @click="submitNewGame"
         >
           <span class="mr-2 text">Submit new game</span>
@@ -263,7 +263,7 @@
         rounded
         style="margin-top: 28px; margin-right: 15px;  margin-left: 10px; "
       ></v-select>
-      <v-btn text block @click="submitNewGame">
+      <v-btn text block @click="submitNewGame" v-if="false">
         <span class="mr-2 text">Submit new game</span>
         <v-icon right dark>
           mdi-plus
